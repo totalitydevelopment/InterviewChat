@@ -1,9 +1,9 @@
-using Microsoft.AspNetCore.Mvc;
+using InterviewTest.Api.DTOs;
 using InterviewTest.Core.Entities;
 using InterviewTest.Core.Interfaces;
 using InterviewTest.Core.Services;
 using InterviewTest.Core.ValueObjects;
-using InterviewTest.Api.DTOs;
+using Microsoft.AspNetCore.Mvc;
 
 namespace InterviewTest.Api.Controllers;
 
@@ -38,7 +38,7 @@ public class GuestsController : ControllerBase
         return Ok(MapToDto(guest));
     }
 
-    // PERFORMANCE ISSUE: This endpoint has N+1 query problem
+    // PERFORMANCE ISSUE
     [HttpGet("with-bookings")]
     public async Task<ActionResult<IEnumerable<GuestDto>>> GetGuestsWithBookings()
     {
@@ -70,10 +70,10 @@ public class GuestsController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<GuestDto>> CreateGuest(CreateGuestDto createGuestDto)
     {
-        // BUG: This validation always fails - the condition is inverted
-        if (string.IsNullOrWhiteSpace(createGuestDto.Email) || 
-            !createGuestDto.Email.Contains("@") || 
-            createGuestDto.DateOfBirth >= DateTime.Today) // BUG: Should be > not >=
+        // BUG * 2
+        if (string.IsNullOrWhiteSpace(createGuestDto.Email) ||
+            !createGuestDto.Email.Contains("@") ||
+            createGuestDto.DateOfBirth >= DateTime.Today) // BUG
         {
             return BadRequest("Invalid guest data: Email must contain @ and date of birth must be in the past");
         }
