@@ -21,10 +21,6 @@ public class BookingTests
         var total = booking.CalculateTotal();
 
         // Assert
-        // FAILING TEST: This test will fail because the CalculateTotal method has a bug
-        // It doesn't include tax in the calculation
-        // Expected: (100 * 2) + (100 * 2 * 0.10) = 200 + 20 = 220
-        // Actual: 200 (tax not included)
         Assert.Equal(220.00m, total);
     }
 
