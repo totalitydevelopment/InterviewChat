@@ -14,13 +14,12 @@ public class Booking : BaseEntity
     
     public int NumberOfNights => (CheckOutDate - CheckInDate).Days;
     
-    // This method has a deliberate bug for interview discussion
     public decimal CalculateTotal()
     {
         var subtotal = RoomRate * NumberOfNights;
         var tax = subtotal * TaxRate;
-        // BUG: Not including tax in total calculation
-        return subtotal; // Should be: subtotal + tax
+        
+        return subtotal; 
     }
     
     public bool IsValidBooking()
