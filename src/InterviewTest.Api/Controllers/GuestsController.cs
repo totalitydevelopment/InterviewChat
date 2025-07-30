@@ -38,7 +38,6 @@ public class GuestsController : ControllerBase
         return Ok(MapToDto(guest));
     }
 
-    // PERFORMANCE ISSUE
     [HttpGet("with-bookings")]
     public async Task<ActionResult<IEnumerable<GuestDto>>> GetGuestsWithBookings()
     {
@@ -48,7 +47,6 @@ public class GuestsController : ControllerBase
         foreach (var guest in guests)
         {
             var dto = MapToDto(guest);
-            // This will trigger individual queries for each guest's bookings
             var revenue = await _bookingService.CalculateBookingRevenueForGuestAsync(guest.Id);
             guestDtos.Add(dto);
         }
@@ -70,10 +68,10 @@ public class GuestsController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<GuestDto>> CreateGuest(CreateGuestDto createGuestDto)
     {
-        // BUG * 2
+        // BUG
         if (string.IsNullOrWhiteSpace(createGuestDto.Email) ||
             !createGuestDto.Email.Contains("@") ||
-            createGuestDto.DateOfBirth >= DateTime.Today) // BUG
+            createGuestDto.DateOfBirth >= DateTime.Today) 
         {
             return BadRequest("Invalid guest data: Email must contain @ and date of birth must be in the past");
         }
